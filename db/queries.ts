@@ -1,6 +1,7 @@
 import { compare } from 'bcrypt'
+import Task from '../models/task-model'
 import User from '../models/user-model'
-import { IUserInput, IUserLoginInput } from '../types/user'
+import { ITaskInput, IUserInput, IUserLoginInput } from '../types/user'
 export async function createUser(user: IUserInput) {
   return await User.create(user)
 }
@@ -19,4 +20,8 @@ export async function authenticateUser(credentials: IUserLoginInput) {
     return null
   }
   return user
+}
+
+export async function createTask(task: ITaskInput) {
+  return Task.create(task)
 }

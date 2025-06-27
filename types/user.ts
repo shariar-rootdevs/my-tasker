@@ -22,6 +22,18 @@ export interface UserRegistrationInput {
   confirmPassword: string
 }
 
+export interface ITaskInput {
+  taskName: string
+  description: string
+  startDate: Date
+  endDate: Date
+  priority: 'Low' | 'Medium' | 'High' | 'Urgent'
+  status: 'Pending' | 'In Progress' | 'Completed'
+  isCompleted: boolean
+  assignedTo?: string
+  userId: string
+}
+
 export interface IAuthUser {
   _id: string
   firstName: string
