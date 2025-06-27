@@ -23,5 +23,21 @@ export async function authenticateUser(credentials: IUserLoginInput) {
 }
 
 export async function createTask(task: ITaskInput) {
-  return Task.create(task)
+  try {
+    const newTask = await Task.create(task)
+    return newTask
+  } catch (error) {
+    console.error('Failed to create task:', error)
+    throw new Error('Could not create task')
+  }
+}
+
+export async function getAllTasks(userId: string) {
+  try {
+    const tasks = await Task.find({ userId })
+    return tasks
+  } catch (error) {
+    console.error('Failed to fetch tasks:', error)
+    throw new Error('Could not fetch tasks from database')
+  }
 }
