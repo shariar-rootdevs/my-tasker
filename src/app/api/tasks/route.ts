@@ -6,6 +6,17 @@ import { ITaskInput } from '../../../../types/user'
 
 export async function POST(request: NextRequest) {
   try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('authToken')?.value
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const decoded = await verifyToken(token)
+    const userId = decoded?.userId
+    if (!userId) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    }
     const taskData = await request.json()
     const task: ITaskInput = await createTask(taskData)
     return NextResponse.json(

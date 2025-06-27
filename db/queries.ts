@@ -41,3 +41,13 @@ export async function getAllTasks(userId: string) {
     throw new Error('Could not fetch tasks from database')
   }
 }
+
+export async function getTaskById(taskId: string) {
+  try {
+    const task = await Task.findById({ _id: taskId })
+    return task
+  } catch (error) {
+    console.error('Failed to fetch task', error)
+    throw new Error('Failed to fetch task')
+  }
+}

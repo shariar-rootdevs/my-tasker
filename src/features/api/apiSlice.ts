@@ -9,7 +9,11 @@ export const apiSlice = createApi({
     getTasks: builder.query({
       query: () => '/tasks',
     }),
+
+    getTaskById: builder.query({
+      query: (id) => `/tasks/${id}`,
+    }),
   }),
 })
 
-export const { useGetTasksQuery } = apiSlice
+export const { useGetTasksQuery, useGetTaskByIdQuery } = apiSlice
