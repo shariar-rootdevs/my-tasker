@@ -11,10 +11,11 @@ async function registerUser(userData: IUserInput) {
 }
 
 async function verifyUserLogin(loginData: IUserLoginInput) {
-  const isValid = await authenticateUser(loginData)
+  const user = await authenticateUser(loginData)
 
-  if (isValid) {
-    return { success: true }
+  if (user) {
+    const { _id, firstName, lastName, email } = user
+    return { success: true, user: { _id, firstName, lastName, email } }
   } else {
     throw new Error('Invalid email or password')
   }

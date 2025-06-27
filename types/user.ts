@@ -21,3 +21,10 @@ export interface UserRegistrationInput {
   password: string
   confirmPassword: string
 }
+
+export interface IAuthUser {
+  _id: string
+  firstName: string
+  lastName: string
+  email: string
+}

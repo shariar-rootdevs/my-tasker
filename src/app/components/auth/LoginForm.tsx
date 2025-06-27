@@ -1,5 +1,6 @@
 'use client'
 import { verifyUserLogin } from '@/app/actions'
+import { useAuth } from '@/app/hooks/useAuth'
 import { loginSchema } from '@/app/schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -10,6 +11,7 @@ import { z } from 'zod'
 type LoginFormData = z.infer<typeof loginSchema>
 export default function LoginForm() {
   const router = useRouter()
+  const { setAuth } = useAuth()
   const {
     register,
     handleSubmit,
@@ -23,6 +25,7 @@ export default function LoginForm() {
     try {
       const result = await verifyUserLogin(data)
       if (result.success) {
+        setAuth(result.user)
         toast.success('Login Successful')
         router.push('/tasker')
       }
