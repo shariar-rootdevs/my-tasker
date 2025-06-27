@@ -26,6 +26,7 @@ export default function LoginForm() {
       const result = await verifyUserLogin(data)
       if (result.success) {
         setAuth(result.user)
+        localStorage.setItem('auth', JSON.stringify(result.user))
         toast.success('Login Successful')
         router.push('/tasker')
       }
