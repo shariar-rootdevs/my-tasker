@@ -1,12 +1,13 @@
 'use client'
-import { useAuth } from '@/app/hooks/useAuth'
+import { logout } from '@/app/actions'
 export default function SignOut() {
-  const { setAuth } = useAuth()
+  async function handleLogout() {
+    await logout()
+  }
   return (
     <div>
       <button
-        type='button'
-        onClick={() => setAuth(null)}
+        onClick={handleLogout}
         className='px-6 py-2 rounded-full border border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition-all'
       >
         Logout

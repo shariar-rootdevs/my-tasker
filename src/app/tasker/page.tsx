@@ -1,12 +1,13 @@
-'use client'
-import { useAuth } from '../hooks/useAuth'
-export default function TaskPage() {
-  const { auth } = useAuth()
-  console.log(auth)
+import { redirect } from 'next/navigation'
+import { getSession } from '../../../lib/auth'
+
+export default async function TaskPage() {
+  const session = await getSession()
+  if (!session) redirect('/login')
+
   return (
     <div>
-      <p>This is the task page</p>
-      <p>Welcome, {auth ? auth.firstName : 'Guest'}!</p>
+      <p>Welcome, {session.firstName}!</p>
     </div>
   )
 }
