@@ -51,3 +51,13 @@ export async function getTaskById(taskId: string) {
     throw new Error('Failed to fetch task')
   }
 }
+
+export async function deleteTaskById(taskId: string) {
+  try {
+    const deletedTask = await Task.findByIdAndDelete({ _id: taskId })
+    return deletedTask
+  } catch (error) {
+    console.error('Failed to delete task', error)
+    throw new Error('Failed to delete task')
+  }
+}
