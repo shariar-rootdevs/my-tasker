@@ -3,6 +3,7 @@ import { verifyUserLogin } from '@/app/actions'
 import { loginSchema } from '@/app/schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -173,9 +174,11 @@ export default function LoginForm() {
               <div className='text-center'>
                 <p className='text-sm text-gray-600'>
                   Dont have an account?{' '}
-                  <button className='text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors'>
-                    Sign up here
-                  </button>
+                  <Link href='/register'>
+                    <button className='text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors cursor-pointer'>
+                      Sign up here
+                    </button>
+                  </Link>
                 </p>
               </div>
             </div>
