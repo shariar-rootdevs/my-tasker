@@ -64,7 +64,7 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className='md:w-1/2 relative h-[550px]'>
+          <div className='w-full md:w-1/2 relative h-[350px] md:h-[550px]'>
             <Image
               src='/cover.jpg'
               alt='TaskMaster Pro Dashboard'
