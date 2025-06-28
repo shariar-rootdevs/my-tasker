@@ -25,6 +25,11 @@ const taskSchema = new Schema<ITask>(
       required: true,
       trim: true,
     },
+
+    assignedTo: {
+      type: String,
+      trim: true,
+    },
     startDate: {
       type: Date,
       required: true,

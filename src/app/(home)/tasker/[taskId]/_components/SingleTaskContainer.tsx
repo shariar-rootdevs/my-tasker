@@ -13,6 +13,9 @@ import {
   MoreHorizontal,
   User,
 } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import AddTaskForm from '../../_components/AddTaskForm'
 
 const LoadingState = () => (
   <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 md:p-8'>
@@ -138,6 +141,7 @@ interface SingleTaskContainerProps {
   taskId: string
 }
 export default function SingleTaskContainer({ taskId }: SingleTaskContainerProps) {
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false)
   console.log('The task is here in the compoentn is ', taskId)
   const { data, isLoading, isFetching, error } = useGetTaskByIdQuery(taskId)
 
@@ -182,133 +186,133 @@ export default function SingleTaskContainer({ taskId }: SingleTaskContainerProps
   const daysRemaining = getDaysRemaining()
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 md:p-8'>
-      <div className='max-w-4xl mx-auto'>
-        {/* Header */}
-        <div className='flex items-center justify-between mb-8'>
-          <button className='flex items-center text-gray-600 hover:text-gray-900 transition-colors group'>
-            <ArrowLeft className='w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform' />
-            Back to Tasks
-          </button>
-          <div className='flex items-center space-x-3'>
-            <button className='p-2 text-gray-600 hover:text-gray-900 hover:bg-white rounded-lg transition-all'>
-              <Edit3 className='w-5 h-5' />
-            </button>
-            <button className='p-2 text-gray-600 hover:text-gray-900 hover:bg-white rounded-lg transition-all'>
-              <MoreHorizontal className='w-5 h-5' />
-            </button>
-          </div>
-        </div>
+    <div>
+      <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 md:p-8'>
+        <div className='max-w-4xl mx-auto'>
+          <div className='flex items-center justify-between mb-8'>
+            <Link href='/tasker'>
+              <button className='flex items-center text-gray-600 hover:text-gray-900 transition-colors group cursor-pointer'>
+                <ArrowLeft className='w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform' />
+                Back to Tasks
+              </button>
+            </Link>
 
-        {/* Main Content */}
-        <div className='bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden'>
-          {/* Header Section */}
-          <div className='bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white'>
-            <div className='flex flex-col md:flex-row md:items-start md:justify-between gap-4'>
-              <div className='flex-1'>
-                <h1 className='text-3xl font-bold mb-3 leading-tight'>{data.taskName}</h1>
-                <div className='flex flex-wrap items-center gap-3'>
-                  <PriorityBadge priority={data.priority} />
-                  <StatusBadge status={data.status} isCompleted={data.isCompleted} />
-                </div>
-              </div>
-              <div className='text-right'>
-                <div className='text-sm opacity-90 mb-1'>Days remaining</div>
-                <div
-                  className={`text-2xl font-bold ${
-                    daysRemaining < 0
-                      ? 'text-red-200'
-                      : daysRemaining < 3
-                      ? 'text-yellow-200'
-                      : 'text-white'
-                  }`}
-                >
-                  {daysRemaining < 0
-                    ? 'Overdue'
-                    : daysRemaining === 0
-                    ? 'Due Today'
-                    : `${daysRemaining} days`}
-                </div>
-              </div>
+            <div className='flex items-center space-x-3'>
+              <button
+                onClick={() => setOpenDrawer(true)}
+                className='p-2 text-gray-600 hover:text-gray-900 hover:bg-white rounded-lg transition-all cursor-pointer'
+              >
+                <Edit3 className='w-5 h-5' />
+              </button>
+              <button className='p-2 text-gray-600 hover:text-gray-900 hover:bg-white rounded-lg transition-all'>
+                <MoreHorizontal className='w-5 h-5' />
+              </button>
             </div>
           </div>
 
-          {/* Content Section */}
-          <div className='p-8'>
-            {/* Description */}
-            <div className='mb-8'>
-              <h2 className='text-lg font-semibold text-gray-900 mb-3 flex items-center'>
-                <div className='w-1 h-6 bg-blue-600 rounded-full mr-3'></div>
-                Description
-              </h2>
-              <p className='text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100'>
-                {data.description}
-              </p>
+          <div className='bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden'>
+            <div className='bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white'>
+              <div className='flex flex-col md:flex-row md:items-start md:justify-between gap-4'>
+                <div className='flex-1'>
+                  <h1 className='text-3xl font-bold mb-3 leading-tight'>{data.taskName}</h1>
+                  <div className='flex flex-wrap items-center gap-3'>
+                    <PriorityBadge priority={data.priority} />
+                    <StatusBadge status={data.status} isCompleted={data.isCompleted} />
+                  </div>
+                </div>
+                <div className='text-right'>
+                  <div className='text-sm opacity-90 mb-1'>Days remaining</div>
+                  <div
+                    className={`text-2xl font-bold ${
+                      daysRemaining < 0
+                        ? 'text-red-200'
+                        : daysRemaining < 3
+                        ? 'text-yellow-200'
+                        : 'text-white'
+                    }`}
+                  >
+                    {daysRemaining < 0
+                      ? 'Overdue'
+                      : daysRemaining === 0
+                      ? 'Due Today'
+                      : `${daysRemaining} days`}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Details Grid */}
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              {/* Start Date */}
-              <div className='bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100'>
-                <div className='flex items-center mb-3'>
-                  <div className='w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3'>
-                    <Calendar className='w-5 h-5 text-green-600' />
-                  </div>
-                  <div>
-                    <p className='text-sm font-medium text-green-800'>Start Date</p>
-                  </div>
-                </div>
-                <p className='text-lg font-semibold text-green-900'>{formatDate(data.startDate)}</p>
-              </div>
-
-              {/* End Date */}
-              <div className='bg-gradient-to-br from-red-50 to-rose-50 p-6 rounded-xl border border-red-100'>
-                <div className='flex items-center mb-3'>
-                  <div className='w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3'>
-                    <Clock className='w-5 h-5 text-red-600' />
-                  </div>
-                  <div>
-                    <p className='text-sm font-medium text-red-800'>End Date</p>
-                  </div>
-                </div>
-                <p className='text-lg font-semibold text-red-900'>{formatDate(data.endDate)}</p>
-              </div>
-
-              {/* User */}
-              <div className='bg-gradient-to-br from-purple-50 to-violet-50 p-6 rounded-xl border border-purple-100'>
-                <div className='flex items-center mb-3'>
-                  <div className='w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3'>
-                    <User className='w-5 h-5 text-purple-600' />
-                  </div>
-                  <div>
-                    <p className='text-sm font-medium text-purple-800'>Assigned To</p>
-                  </div>
-                </div>
-                <p className='text-lg font-semibold text-purple-900'>
-                  User #{data.userId.slice(-6)}
+            <div className='p-8'>
+              <div className='mb-8'>
+                <h2 className='text-lg font-semibold text-gray-900 mb-3 flex items-center'>
+                  <div className='w-1 h-6 bg-blue-600 rounded-full mr-3'></div>
+                  Description
+                </h2>
+                <p className='text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100'>
+                  {data.description}
                 </p>
               </div>
-            </div>
 
-            {/* Timeline */}
-            <div className='mt-8 pt-8 border-t border-gray-200'>
-              <h2 className='text-lg font-semibold text-gray-900 mb-4 flex items-center'>
-                <div className='w-1 h-6 bg-blue-600 rounded-full mr-3'></div>
-                Timeline
-              </h2>
-              <div className='space-y-4'>
-                <div className='flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100'>
-                  <div className='w-2 h-2 bg-blue-600 rounded-full mr-4'></div>
-                  <div className='flex-1'>
-                    <p className='font-medium text-gray-900'>Task Created</p>
-                    <p className='text-sm text-gray-600'>{formatDateTime(data.createdAt)}</p>
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                <div className='bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100'>
+                  <div className='flex items-center mb-3'>
+                    <div className='w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3'>
+                      <Calendar className='w-5 h-5 text-green-600' />
+                    </div>
+                    <div>
+                      <p className='text-sm font-medium text-green-800'>Start Date</p>
+                    </div>
                   </div>
+                  <p className='text-lg font-semibold text-green-900'>
+                    {formatDate(data.startDate)}
+                  </p>
                 </div>
-                <div className='flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100'>
-                  <div className='w-2 h-2 bg-yellow-500 rounded-full mr-4'></div>
-                  <div className='flex-1'>
-                    <p className='font-medium text-gray-900'>Last Updated</p>
-                    <p className='text-sm text-gray-600'>{formatDateTime(data.updatedAt)}</p>
+
+                <div className='bg-gradient-to-br from-red-50 to-rose-50 p-6 rounded-xl border border-red-100'>
+                  <div className='flex items-center mb-3'>
+                    <div className='w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3'>
+                      <Clock className='w-5 h-5 text-red-600' />
+                    </div>
+                    <div>
+                      <p className='text-sm font-medium text-red-800'>End Date</p>
+                    </div>
+                  </div>
+                  <p className='text-lg font-semibold text-red-900'>{formatDate(data.endDate)}</p>
+                </div>
+
+                <div className='bg-gradient-to-br from-purple-50 to-violet-50 p-6 rounded-xl border border-purple-100'>
+                  <div className='flex items-center mb-3'>
+                    <div className='w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3'>
+                      <User className='w-5 h-5 text-purple-600' />
+                    </div>
+                    <div>
+                      <p className='text-sm font-medium text-purple-800'>Assigned To</p>
+                    </div>
+                  </div>
+                  <p className='text-lg font-semibold text-purple-900'>
+                    User #{data.userId.slice(-6)}
+                  </p>
+                </div>
+              </div>
+
+              <div className='mt-8 pt-8 border-t border-gray-200'>
+                <h2 className='text-lg font-semibold text-gray-900 mb-4 flex items-center'>
+                  <div className='w-1 h-6 bg-blue-600 rounded-full mr-3'></div>
+                  Timeline
+                </h2>
+                <div className='space-y-4'>
+                  <div className='flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100'>
+                    <div className='w-2 h-2 bg-blue-600 rounded-full mr-4'></div>
+                    <div className='flex-1'>
+                      <p className='font-medium text-gray-900'>Task Created</p>
+                      <p className='text-sm text-gray-600'>{formatDateTime(data.createdAt)}</p>
+                    </div>
+                  </div>
+                  <div className='flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100'>
+                    <div className='w-2 h-2 bg-yellow-500 rounded-full mr-4'></div>
+                    <div className='flex-1'>
+                      <p className='font-medium text-gray-900'>Last Updated</p>
+                      <p className='text-sm text-gray-600'>{formatDateTime(data.updatedAt)}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -316,6 +320,23 @@ export default function SingleTaskContainer({ taskId }: SingleTaskContainerProps
           </div>
         </div>
       </div>
+      {openDrawer && (
+        <div className='fixed inset-0 backdrop-blur-[10px] bg-black/30 transition-opacity'>
+          <div
+            className='fixed inset-0 backdrop-blur-[2px] transition-opacity'
+            onClick={() => setOpenDrawer(false)}
+          ></div>
+
+          <div className='flex items-center justify-center p-4 min-h-screen'>
+            <AddTaskForm
+              isEditMode={true}
+              isModal={true}
+              onClose={() => setOpenDrawer(false)}
+              taskData={data}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

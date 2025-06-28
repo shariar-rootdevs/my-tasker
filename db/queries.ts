@@ -32,6 +32,21 @@ export async function createTask(task: ITaskInput) {
   }
 }
 
+export async function updateTask(id: string, updatedTask: ITaskInput) {
+  try {
+    const task = await Task.findByIdAndUpdate(id, updatedTask, { new: true })
+
+    if (!task) {
+      throw new Error('Task not found')
+    }
+
+    return task
+  } catch (error) {
+    console.error('Failed to update task:', error)
+    throw new Error('Could not update task')
+  }
+}
+
 export async function getAllTasks(userId: string) {
   try {
     const tasks = await Task.find({ userId })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCreateTaskMutation } from '@/features/api/apiSlice'
+import { useCreateTaskMutation, useUpdateTaskMutation } from '@/features/api/apiSlice'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Calendar,
@@ -30,37 +30,79 @@ const taskSchema = z.object({
 
 type AddTaskData = z.infer<typeof taskSchema>
 
-interface AddTaskFormProps {
-  isModal?: boolean
-  onClose?: () => void
+interface TaskData {
+  _id: string
+  taskName: string
+  description: string
+  startDate: string
+  endDate: string
+  priority: 'Low' | 'Medium' | 'High'
+  status: 'Pending' | 'In Progress' | 'Completed'
+  isCompleted: boolean
+  userId: string
+  createdAt: string
+  assignedTo?: string
+  updatedAt: string
+  __v: number
 }
 
-export default function AddTaskForm({ isModal = false, onClose }: AddTaskFormProps) {
+interface AddTaskFormProps {
+  isModal?: boolean
+  isEditMode?: boolean
+  onClose?: () => void
+  taskData?: TaskData
+}
+
+export default function AddTaskForm({
+  isModal = false,
+  onClose,
+  isEditMode = false,
+  taskData,
+}: AddTaskFormProps) {
+  const defaultValues = {
+    taskName: taskData?.taskName || '',
+    description: taskData?.description || '',
+    startDate: taskData?.startDate.split('T')[0] || '',
+    endDate: taskData?.endDate.split('T')[0] || '',
+    priority: taskData?.priority || 'Low',
+    status: taskData?.status || 'Pending',
+    assignedTo: taskData?.assignedTo || '',
+  }
   const {
     register,
     handleSubmit,
+
     formState: { errors, isSubmitting },
     reset,
   } = useForm<AddTaskData>({
+    defaultValues: defaultValues,
     resolver: zodResolver(taskSchema),
     mode: 'onTouched',
   })
 
   const [createTask] = useCreateTaskMutation()
+  const [updateTask] = useUpdateTaskMutation()
 
   const onSubmit = async (data: AddTaskData) => {
+    let successMessage: string
     try {
-      const result = await createTask(data).unwrap()
-      console.log(result)
-      toast.success('Task created successfully!')
+      if (isEditMode && taskData) {
+        await updateTask({ id: taskData._id, ...data })
+        successMessage = 'Task updated successfully!'
+      } else {
+        await createTask(data)
+        successMessage = 'Task created successfully!'
+      }
+
+      toast.success(successMessage)
       reset()
 
       if (isModal && onClose) {
         onClose()
       }
     } catch (error) {
-      console.error('Task creation failed:', error)
-      toast.error('Failed to create task. Please try again.')
+      console.error(isEditMode ? 'Task update failed:' : 'Task creation failed:', error)
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} task. Please try again.`)
     }
   }
 
@@ -106,7 +148,9 @@ export default function AddTaskForm({ isModal = false, onClose }: AddTaskFormPro
                   <Plus className='w-6 h-6 text-white' />
                 </div>
                 <div>
-                  <h2 className='text-2xl font-bold'>Create New Task</h2>
+                  <h2 className='text-2xl font-bold'>
+                    {isEditMode ? 'Edit Task' : 'Create New Task'}{' '}
+                  </h2>
                   <p className='text-blue-100 text-sm'>Add a new task to your project workflow</p>
                 </div>
               </div>
@@ -436,7 +480,9 @@ export default function AddTaskForm({ isModal = false, onClose }: AddTaskFormPro
                   ) : (
                     <>
                       <Sparkles className='w-4 h-4 relative z-10' />
-                      <span className='relative z-10'>Create Task</span>
+                      <span className='relative z-10'>
+                        {isEditMode ? 'Edit Task' : 'Create Task'}{' '}
+                      </span>
                     </>
                   )}
                 </button>

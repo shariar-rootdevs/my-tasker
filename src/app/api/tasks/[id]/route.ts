@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { deleteTaskById, getTaskById } from '../../../../../db/queries'
+import { deleteTaskById, getTaskById, updateTask } from '../../../../../db/queries'
 import { verifyToken } from '../../../../../lib/auth'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -79,5 +79,57 @@ export async function DELETE(request: NextRequest, context: any) {
   } catch (error) {
     console.error('Error fetching task:', error)
     return NextResponse.json({ error: 'Failed to fetch task' }, { status: 500 })
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function PUT(request: NextRequest, context: any) {
+  const { params } = context
+  const id = params.id
+
+  try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('authToken')?.value
+
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const decoded = await verifyToken(token)
+    const userId = decoded?.userId
+    if (!userId) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
+    }
+
+    if (!Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: 'Invalid task ID' }, { status: 400 })
+    }
+
+    const existingTask = await getTaskById(id)
+    if (!existingTask) {
+      return NextResponse.json({ error: 'Task not found' }, { status: 404 })
+    }
+
+    if (existingTask.userId.toString() !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
+    const updateData = await request.json()
+
+    const updatedTask = await updateTask(id, {
+      ...updateData,
+      userId,
+    })
+
+    return NextResponse.json(
+      {
+        message: 'Task updated successfully',
+        task: updatedTask,
+      },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('Error updating task:', error)
+    return NextResponse.json({ error: 'Failed to update task' }, { status: 500 })
   }
 }
