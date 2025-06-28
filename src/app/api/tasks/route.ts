@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
     const taskData = await request.json()
-    const task: ITaskInput = await createTask(taskData)
+    const task: ITaskInput = await createTask({ ...taskData, userId })
     return NextResponse.json(
       {
         message: 'Task created successfully',

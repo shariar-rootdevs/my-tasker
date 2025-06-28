@@ -1,5 +1,6 @@
 'use client'
 
+import { useCreateTaskMutation } from '@/features/api/apiSlice'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Calendar,
@@ -14,6 +15,7 @@ import {
   X,
 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { z } from 'zod'
 
 const taskSchema = z.object({
@@ -44,11 +46,21 @@ export default function AddTaskForm({ isModal = false, onClose }: AddTaskFormPro
     mode: 'onTouched',
   })
 
-  const onSubmit = (data: AddTaskData) => {
-    console.log('Form Data:', data)
-    reset()
-    if (isModal && onClose) {
-      onClose()
+  const [createTask] = useCreateTaskMutation()
+
+  const onSubmit = async (data: AddTaskData) => {
+    try {
+      const result = await createTask(data).unwrap()
+      console.log(result)
+      toast.success('Task created successfully!')
+      reset()
+
+      if (isModal && onClose) {
+        onClose()
+      }
+    } catch (error) {
+      console.error('Task creation failed:', error)
+      toast.error('Failed to create task. Please try again.')
     }
   }
 

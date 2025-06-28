@@ -7,7 +7,7 @@ export interface ITask extends Document {
   endDate: Date
   priority: 'Low' | 'Medium' | 'High' | 'Urgent'
   status: 'Pending' | 'In Progress' | 'Completed'
-  isCompleted: boolean
+  isCompleted?: boolean
   assignedTo?: string
   userId: Types.ObjectId
 }
