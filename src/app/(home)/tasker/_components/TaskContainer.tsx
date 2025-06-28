@@ -1,5 +1,7 @@
 'use client'
+import { useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
+import AddTaskForm from './AddTaskForm'
 import TaskList from './TaskList'
 
 interface User {
@@ -10,6 +12,7 @@ interface User {
 }
 
 export default function TaskContainer({ user }: { user: User }) {
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false)
   return (
     <div className='min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 items-center'>
       <header className='sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md py-2 '>
@@ -21,7 +24,10 @@ export default function TaskContainer({ user }: { user: User }) {
             </p>
           </div>
 
-          <button className='px-4 py-1.5 text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full hover:from-purple-700 hover:to-indigo-700 transition'>
+          <button
+            onClick={() => setOpenDrawer(true)}
+            className='px-4 py-1.5 text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full hover:from-purple-700 hover:to-indigo-700 transition cursor-pointer'
+          >
             Add New Task
           </button>
         </div>
@@ -30,6 +36,31 @@ export default function TaskContainer({ user }: { user: User }) {
       <main className='p-4 sm:p-6'>
         <TaskList />
       </main>
+
+      {openDrawer && (
+        <div className='fixed inset-0 z-50 overflow-y-auto'>
+          <div
+            className='fixed inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity hover:text-red-400'
+            onClick={() => setOpenDrawer(false)}
+          ></div>
+
+          <div className='flex items-center justify-center min-h-screen p-4 '>
+            <div className='relative bg-white rounded-xl shadow-  mx-auto overflow-hidden  w-[650px]'>
+              <div className='flex justify-between  px-6 py-4'>
+                <div className='pb-0'>
+                  <h2 className='text-2xl font-semibold text-gray-900'>Create New Task</h2>
+                </div>
+
+                <h2 className='font-bold text-gray-600 text-2xl cursor-pointer'>X</h2>
+              </div>
+
+              <div className='px-4 '>
+                <AddTaskForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
