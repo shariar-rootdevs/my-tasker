@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getSession } from '../../lib/auth'
-import SignOut from './components/auth/SignOut'
+import { getSession } from '../../../lib/auth'
+import SignOut from '../components/auth/SignOut'
 
 export default async function HomePage() {
   const session = await getSession()

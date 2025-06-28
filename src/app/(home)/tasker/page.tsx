@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { getSession } from '../../../lib/auth'
+import { getSession } from '../../../../lib/auth'
 import TaskContainer from './_components/TaskContainer'
 
 export default async function TaskPage() {
