@@ -17,8 +17,6 @@ import TaskCard from './TaskCard'
 export default function TaskList() {
   const { data, isLoading, isFetching, error } = useGetTasksQuery({})
 
-  console.log('The data is', data)
-
   if (isLoading || isFetching) {
     return (
       <div className='flex justify-center items-center py-10 text-gray-500'>Loading tasks...</div>

@@ -40,24 +40,12 @@ export default function TaskContainer({ user }: { user: User }) {
       {openDrawer && (
         <div className='fixed inset-0 z-50 overflow-y-auto'>
           <div
-            className='fixed inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity hover:text-red-400'
+            className='fixed inset-0 backdrop-blur-[2px] transition-opacity'
             onClick={() => setOpenDrawer(false)}
           ></div>
 
-          <div className='flex items-center justify-center min-h-screen p-4 '>
-            <div className='relative bg-white rounded-xl shadow-  mx-auto overflow-hidden  w-[650px]'>
-              <div className='flex justify-between  px-6 py-4'>
-                <div className='pb-0'>
-                  <h2 className='text-2xl font-semibold text-gray-900'>Create New Task</h2>
-                </div>
-
-                <h2 className='font-bold text-gray-600 text-2xl cursor-pointer'>X</h2>
-              </div>
-
-              <div className='px-4 '>
-                <AddTaskForm />
-              </div>
-            </div>
+          <div className='flex items-center justify-center p-4 min-h-screen'>
+            <AddTaskForm isModal={true} onClose={() => setOpenDrawer(false)} />
           </div>
         </div>
       )}
