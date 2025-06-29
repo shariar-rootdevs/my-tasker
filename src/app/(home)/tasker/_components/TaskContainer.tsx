@@ -1,4 +1,5 @@
 'use client'
+import { logout } from '@/app/actions'
 import { useState } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
 import AddTaskForm from './AddTaskForm'
@@ -13,23 +14,43 @@ interface User {
 
 export default function TaskContainer({ user }: { user: User }) {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false)
+  async function handleLogout() {
+    await logout()
+  }
   return (
     <div className='min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 items-center'>
       <header className='sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md py-2 '>
         <div className='flex items-center justify-between px-4 py-2'>
-          <div className='flex items-center gap-2'>
-            <FaUserCircle className='text-2xl text-purple-700' />
-            <p className='text-sm font-medium text-gray-800'>
-              {user.firstName} {user.lastName}
-            </p>
+          <div className='flex gap-2'>
+            <div className='hidden md:flex items-center gap-2'>
+              <FaUserCircle className='text-2xl text-purple-700' />
+              <p className='text-sm font-medium text-gray-800'>
+                {user.firstName} {user.lastName}
+              </p>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className='px-4 py-1.5 text-sm bg-gradient-to-r bg-red-600 text-white rounded-full hover:bg-red-700 transition cursor-pointer  md:hidden'
+            >
+              Signout
+            </button>
           </div>
 
-          <button
-            onClick={() => setOpenDrawer(true)}
-            className='px-4 py-1.5 text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full hover:from-purple-700 hover:to-indigo-700 transition cursor-pointer'
-          >
-            Add New Task
-          </button>
+          <div className='flex gap-2'>
+            <button
+              onClick={handleLogout}
+              className='px-4 py-1.5 text-sm bg-gradient-to-r bg-red-600 text-white rounded-full hover:bg-red-700 transition cursor-pointer hidden md:block'
+            >
+              Signout
+            </button>
+            <button
+              onClick={() => setOpenDrawer(true)}
+              className='px-4 py-1.5 text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full hover:from-purple-700 hover:to-indigo-700 transition cursor-pointer'
+            >
+              Add New Task
+            </button>
+          </div>
         </div>
       </header>
 
